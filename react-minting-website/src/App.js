@@ -1,8 +1,21 @@
 import { nanoid } from 'nanoid';
 import './App.css';
+import { useWeb3React } from '@web3-react/core';
+import web3 from 'web3';
 import { apes, mainBgImage } from './data';
+import { injected } from './wallet/Connector';
 
 function App() {
+  const { active, account, library, activate, deactivate } = useWeb3React();
+
+  async function connect() {
+    try {
+      await activate(injected);
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
+
   return (
     <div className="App">
       {/* MAIN BANNER */}
@@ -12,9 +25,15 @@ function App() {
       >
         <div className="main-card__inner-wrapper">
           <h1 className="header-txt">React Minting Website</h1>
-          <button type="button" className="main-mint-btn">
-            Mint
-          </button>
+          {active ? (
+            <button type="button" className="main-mint-btn">
+              Mint
+            </button>
+          ) : (
+            <button type="button" onClick={connect} className="main-mint-btn">
+              Connect Wallet To Mint
+            </button>
+          )}
         </div>
       </div>
 
